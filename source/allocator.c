@@ -2,7 +2,7 @@
 #include <string.h>
 	#ifdef _WIN32
 		#include <windows.h>
-	#elif defined(__linux__)
+	#elif defined(__linux__) || defined(__APPLE__)
 		#include <sys/mman.h>
 	#endif
 #include "../headers/allocator.h"
@@ -18,7 +18,7 @@ void *os_alloc(size_t size){
 		PAGE_READWRITE
 		);
 		
-	#elif defined(__linux__)
+	#elif defined(__linux__) || defined(__APPLE__)
 
 		void* p = mmap(
         NULL,
@@ -28,13 +28,11 @@ void *os_alloc(size_t size){
     	-1,
         0
     	);
-    	if (p == NULL){
+    	if (p == MAP_FAILED){
     		printf("Unable to initialize the linux heap ");
     		return
     	}
 		return p;
-	#elif defined(__APPLE__) 
-		printf("this part is for a MAC os");
 	#else 
 		printf("Unknown OS has been detected");
 	#endif
@@ -80,8 +78,10 @@ void malloc_destroy(void)
         heap = NULL;
         free_list = NULL;
     }
-    #elif defined(__linux__)
+    #elif defined(__linux__) || defined(__APPLE__)
+    if (heap != NULL){
     	munmap(heap, HEAP_SIZE );
+    }
     #endif
     return;
 }
