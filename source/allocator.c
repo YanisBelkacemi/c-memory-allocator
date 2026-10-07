@@ -1,11 +1,16 @@
 #include <stdio.h>
 #include <string.h>
-#include <windows.h>
+	#ifdef _WIN32
+		#include <windows.h>
+	#elif defined(__linux__)
+		#include <sys/mman.h>
+	#endif
 #include "../headers/allocator.h"
 #define HEAP_SIZE 4096
 
 void *os_alloc(size_t size){
 	#ifdef _WIN32
+	
 		return VirtualAlloc(
 		NULL ,
 		size,
@@ -13,9 +18,22 @@ void *os_alloc(size_t size){
 		PAGE_READWRITE
 		);
 		
-	#elif (__linux__)
-		printf("this part is for a linux OS");
-	#elif (__APPLE__) 
+	#elif defined(__linux__)
+
+		void* p = mmap(
+        NULL,
+       	size,
+       	PROT_READ | PROT_WRITE,
+	   	MAP_PRIVATE | MAP_ANONYMOUS,
+    	-1,
+        0
+    	);
+    	if (p == NULL){
+    		printf("Unable to initialize the linux heap ");
+    		return
+    	}
+		return p;
+	#elif defined(__APPLE__) 
 		printf("this part is for a MAC os");
 	#else 
 		printf("Unknown OS has been detected");
@@ -62,6 +80,8 @@ void malloc_destroy(void)
         heap = NULL;
         free_list = NULL;
     }
+    #elif defined(__linux__)
+    	munmap(heap, HEAP_SIZE );
     #endif
     return;
 }
@@ -197,6 +217,9 @@ int my_write(void *p  , size_t offset, unsigned char data){
 }
 
 
+int main(){
 
+	return 0;
+}
 
 
