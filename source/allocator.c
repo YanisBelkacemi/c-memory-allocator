@@ -215,11 +215,3 @@ int my_write(void *p  , size_t offset, unsigned char data){
 	data_ptr[offset] = data;
 	return 0;
 }
-
-
-int main(){
-
-	return 0;
-}
-
-
