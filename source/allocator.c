@@ -4,9 +4,6 @@
 #include "../headers/allocator.h"
 #define HEAP_SIZE 4096
 
-
-
-
 void *os_alloc(size_t size){
 	#ifdef _WIN32
 		return VirtualAlloc(
