@@ -101,7 +101,6 @@ I built this project to understand how memory allocation works at a lower level 
 * [ ] Linux `mmap()` backend
 * [ ] macOS memory backend
 * [ ] Memory alignment
-* [ ] More extensive tests
 * [ ] Stress testing
 * [ ] Better fragmentation handling
 * [ ] Thread safety
